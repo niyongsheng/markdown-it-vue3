@@ -1,0 +1,104 @@
+{
+  "name": "markdown-it-vue3",
+  "version": "1.0.0",
+  "private": false,
+  "description": "The vue3.0 lib for markdown-it",
+  "author": {
+    "name": "Niko",
+    "e-mail": "niyongsheng@outlook.com"
+  },
+  "keywords": [
+    "markdown",
+    "markdown-it",
+    "markdown-it-plugin",
+    "vue",
+    "markdown-it-vue3",
+    "vue3.0"
+  ],
+  "files": [
+    "dist",
+    "doc",
+    "src",
+    "types"
+  ],
+  "typings": "types/index.d.ts",
+  "scripts": {
+    "dev": "vue-cli-service serve ./example/main.js",
+    "build": "npm run build:lib && npm run build:light && npm run build:example",
+    "lint": "vue-cli-service lint",
+    "build:example": "vue-cli-service build --dest example/dist ./example/main.js",
+    "build:lib": "vue-cli-service build --target lib ./src/index.js",
+    "build:light": "vue-cli-service build --target lib --name markdown-it-vue3-light --no-clean ./src/index-light.js"
+  },
+  "main": "dist/markdown-it-vue3.umd.min.js",
+  "dependencies": {
+    "@iktakahiro/markdown-it-katex": "^4.0.1",
+    "core-js": "^3.39.0",
+    "echarts": "^5.6.0",
+    "flowchart.js": "^1.18.0",
+    "font-awesome-icon-chars": "^2.6.0",
+    "github-markdown-css": "^5.8.1",
+    "highlight.js": "^11.11.1",
+    "markdown-it": "^14.1.0",
+    "markdown-it-abbr": "^2.0.0",
+    "markdown-it-container": "^4.0.0",
+    "markdown-it-deflist": "^3.0.0",
+    "markdown-it-emoji": "^3.0.0",
+    "markdown-it-footnote": "^4.0.0",
+    "markdown-it-github-toc": "^3.2.4",
+    "markdown-it-ins": "^4.0.0",
+    "markdown-it-katex": "^2.0.3",
+    "markdown-it-latex": "^0.2.0",
+    "markdown-it-mark": "^4.0.0",
+    "markdown-it-regex": "^0.2.2",
+    "markdown-it-source-map": "^0.1.1",
+    "markdown-it-sub": "^2.0.0",
+    "markdown-it-sup": "^2.0.0",
+    "markdown-it-task-lists": "^2.1.1",
+    "mermaid": "^11.6.0",
+    "vue": "^3.5.13"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.26.10",
+    "@babel/eslint-parser": "^7.27.0",
+    "@vue/cli-plugin-babel": "~5.0.8",
+    "@vue/cli-plugin-eslint": "~5.0.8",
+    "@vue/cli-service": "~5.0.8",
+    "@vue/compiler-sfc": "^3.5.13",
+    "eslint": "^8.57.1",
+    "eslint-plugin-vue": "^9.33.0",
+    "sass": "^1.86.0",
+    "sass-loader": "^16.0.5"
+  },
+  "eslintConfig": {
+    "root": true,
+    "env": {
+      "node": true
+    },
+    "extends": [
+      "plugin:vue/vue3-essential",
+      "eslint:recommended"
+    ],
+    "parserOptions": {
+      "parser": "@babel/eslint-parser",
+      "requireConfigFile": false
+    },
+    "rules": {
+      "vue/multi-word-component-names": "off"
+    }
+  },
+  "browserslist": [
+    "> 1%",
+    "last 2 versions",
+    "not dead"
+  ],
+  "bugs": {
+    "url": "https://github.com/niyongsheng/markdown-it-vue3/issues"
+  },
+  "homepage": "https://github.com/niyongsheng/markdown-it-vue3",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/niyongsheng/markdown-it-vue3.git"
+  }
+}
