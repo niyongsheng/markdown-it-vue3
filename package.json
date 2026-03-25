@@ -30,7 +30,7 @@
     "build:lib": "vue-cli-service build --target lib ./src/index.js",
     "build:light": "vue-cli-service build --target lib --name markdown-it-vue3-light --no-clean ./src/index-light.js"
   },
-  "main": "dist/markdown-it-vue3.umd.min.js",
+  "main": "dist/markdown-it-vue3.common.js",
   "dependencies": {
     "@iktakahiro/markdown-it-katex": "^4.0.1",
     "core-js": "^3.39.0",

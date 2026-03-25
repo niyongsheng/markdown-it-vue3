@@ -1,0 +1,1 @@
+"use strict";(self["webpackChunkmarkdown_it_vue3"]=self["webpackChunkmarkdown_it_vue3"]||[]).push([[644],{98644:function(e,r,t){t.d(r,{createArchitectureServices:function(){return u.S}});var u=t(85877);t(6902)}}]);
