@@ -19,7 +19,7 @@
 </template>
 
 <script>
-import { defineComponent, ref, watch, nextTick, reactive, computed } from 'vue'
+import { defineComponent, ref, watch, nextTick, reactive, computed, onMounted, onUnmounted } from 'vue'
 import MarkdownIt from 'markdown-it'
 import { full as MarkdownItEmoji } from 'markdown-it-emoji'
 import MarkdownItSubscript from 'markdown-it-sub'
@@ -39,7 +39,7 @@ import MarkdownItLinkAttributes from './markdown-it-link-attributes'
 import MarkdownItEcharts from './markdown-it-plugin-echarts'
 import MarkdownItMermaid from './markdown-it-plugin-mermaid'
 import MarkdownItFlowchart from './markdown-it-plugin-flowchart'
-import MarkdownItHighlight from './markdown-it-highlight'
+import MarkdownItHighlight, { setupCodeCopy } from './markdown-it-highlight'
 import MarkdownItFontAwsome from './markdown-it-font-awsome'
 import MarkdownItImage from './markdown-it-image'
 import 'github-markdown-css'
@@ -137,6 +137,19 @@ export default defineComponent({
     const pendingText = ref('')
     let lastContentLength = 0
     let streamingRenderer = null
+
+    // Setup code copy functionality
+    let cleanupCopy = null
+
+    onMounted(() => {
+      if (markdownRef.value) {
+        cleanupCopy = setupCodeCopy(markdownRef.value)
+      }
+    })
+
+    onUnmounted(() => {
+      cleanupCopy?.()
+    })
 
     const md = new MarkdownIt(markdownItOpts.value || {})
       .use(MarkdownItEmoji)

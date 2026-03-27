@@ -138,4 +138,40 @@ const highlightPlugin = md => {
   }
 }
 
+/**
+ * Setup code copy functionality using event delegation
+ * @param {HTMLElement} container - The container element to attach event listener
+ */
+export const setupCodeCopy = (container) => {
+  if (!container) return
+
+  const handleClick = async (e) => {
+    const btn = e.target.closest('.code-copy-btn')
+    if (!btn) return
+
+    const code = btn.nextElementSibling?.textContent
+    if (!code) return
+
+    // Prevent double-clicks while in copied state
+    if (btn.classList.contains('copied')) return
+
+    try {
+      await navigator.clipboard.writeText(code)
+      btn.classList.add('copied')
+
+      // Reset after 1.5 seconds
+      setTimeout(() => {
+        btn.classList.remove('copied')
+      }, 1500)
+    } catch (err) {
+      console.error('Failed to copy code:', err)
+    }
+  }
+
+  container.addEventListener('click', handleClick)
+
+  // Return cleanup function
+  return () => container.removeEventListener('click', handleClick)
+}
+
 export default highlightPlugin
