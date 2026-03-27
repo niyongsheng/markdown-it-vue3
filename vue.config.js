@@ -2,7 +2,9 @@ const { defineConfig } = require('@vue/cli-service')
 const webpack = require('webpack')
 
 module.exports = defineConfig({
-  publicPath: process.env.NODE_ENV === 'production' ? '/' : '/',
+  publicPath: process.env.NODE_ENV === 'production'
+    ? (process.env.BUILD_TARGET === 'example' ? '/markdown-it-vue3/' : '/')
+    : '/',
   configureWebpack: (config) => {
     if (process.env.VUE_CLI_BUILD_TARGET === 'lib') {
       // Disable code splitting for library builds
