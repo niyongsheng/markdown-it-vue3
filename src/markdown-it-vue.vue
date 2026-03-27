@@ -40,6 +40,7 @@ import MarkdownItFontAwsome from './markdown-it-font-awsome'
 import MarkdownItImage from './markdown-it-image'
 import 'github-markdown-css'
 import 'markdown-it-latex/dist/index.css'
+import './markdown-it-copy.css'
 
 import * as echarts from 'echarts/dist/echarts.simple.min'
 import mermaid from 'mermaid'

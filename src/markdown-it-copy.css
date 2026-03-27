@@ -1,0 +1,51 @@
+/* Code copy button styles */
+pre.hljs {
+  position: relative;
+}
+
+.code-copy-btn {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  padding: 6px;
+  background: transparent;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+  z-index: 10;
+}
+
+pre.hljs:hover .code-copy-btn {
+  opacity: 0.6;
+}
+
+.code-copy-btn:hover {
+  opacity: 1 !important;
+  background: rgba(0, 0, 0, 0.05);
+}
+
+.code-copy-btn:active {
+  background: rgba(0, 0, 0, 0.1);
+}
+
+.code-copy-btn svg {
+  width: 16px;
+  height: 16px;
+  fill: #666;
+  display: block;
+}
+
+/* Copied state */
+.code-copy-btn.copied .copy-icon {
+  display: none;
+}
+
+.code-copy-btn.copied .check-icon {
+  display: block;
+}
+
+.code-copy-btn.copied svg {
+  fill: #28a745;
+}
