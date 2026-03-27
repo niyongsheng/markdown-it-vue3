@@ -121,6 +121,7 @@ The width and height is the size for chart container.
 {
   "width": 500,
   "height": 400,
+  "animation": false,
   "series": [
     {
       "name": "访问来源",
@@ -193,6 +194,26 @@ npm install markdown-it-vue3
 | ------------- | ------------- |
 | Content Cell  | Content Cell  |
 | Content Cell  | Content Cell  |
+
+## table2 (with empty lines)
+
+| 资源类型 | 具体内容 |
+
+|----------|----------|
+
+| 人员 | 采样员、现场负责人 |
+
+| 设备 | 采样器、保存容器、GPS、温控箱 |
+
+| 耗材 | 固定剂、标签、采样记录表 |
+
+| 文档 | 采样方案、作业指导书 |
+
+## list (nested)
+
+*   **采样点位**（排气筒、厂界、无组织监控点）
+    *   **采样频次与时间**
+    *   **检测因子**（如 SO₂、NOx、颗粒物、VOCs、重金属等）
 
 ## flowchart.js
 

@@ -1,10 +1,10 @@
 {
   "name": "markdown-it-vue3",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "private": false,
-  "description": "The vue3.0 lib for markdown-it",
+  "description": "The vue3.0 markdown rendering component for markdown-it",
   "author": {
-    "name": "Niko",
+    "name": "Nico",
     "e-mail": "niyongsheng@outlook.com"
   },
   "keywords": [
@@ -24,11 +24,10 @@
   "typings": "types/index.d.ts",
   "scripts": {
     "dev": "vue-cli-service serve ./example/main.js",
-    "build": "npm run build:lib && npm run build:light && npm run build:example",
+    "build": "npm run build:lib && npm run build:example",
     "lint": "vue-cli-service lint",
     "build:example": "vue-cli-service build --dest example/dist ./example/main.js",
-    "build:lib": "vue-cli-service build --target lib ./src/index.js",
-    "build:light": "vue-cli-service build --target lib --name markdown-it-vue3-light --no-clean ./src/index-light.js"
+    "build:lib": "vue-cli-service build --target lib ./src/index.js"
   },
   "main": "dist/markdown-it-vue3.common.js",
   "dependencies": {

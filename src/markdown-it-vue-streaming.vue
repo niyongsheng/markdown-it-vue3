@@ -1,9 +1,25 @@
 <template>
-  <div class="markdown-body" ref="markdownRef"></div>
+  <div class="streaming-markdown">
+    <div
+      class="markdown-body"
+      ref="markdownRef"
+      @click="hdlClick"
+    >
+      <div v-html="renderedHtml" class="streaming-rendered"></div>
+      <span v-if="pendingText && streaming" class="streaming-pending">{{ pendingText }}</span>
+      <span v-if="streaming" class="streaming-cursor">{{ cursorChar }}</span>
+    </div>
+    <image-viewer
+      v-if="showViewer"
+      :url-list="urlList"
+      v-model="index"
+      :on-close="closeViewer"
+    />
+  </div>
 </template>
 
 <script>
-import {defineComponent, ref, watch, nextTick, computed} from 'vue'
+import { defineComponent, ref, watch, nextTick, reactive, computed } from 'vue'
 import MarkdownIt from 'markdown-it'
 import { full as MarkdownItEmoji } from 'markdown-it-emoji'
 import MarkdownItSubscript from 'markdown-it-sub'
@@ -21,14 +37,19 @@ import MarkdownItGithubToc from 'markdown-it-github-toc'
 import MarkdownItSourceMap from 'markdown-it-source-map'
 import MarkdownItLinkAttributes from './markdown-it-link-attributes'
 import MarkdownItEcharts from './markdown-it-plugin-echarts'
+import MarkdownItMermaid from './markdown-it-plugin-mermaid'
 import MarkdownItFlowchart from './markdown-it-plugin-flowchart'
 import MarkdownItHighlight from './markdown-it-highlight'
 import MarkdownItFontAwsome from './markdown-it-font-awsome'
+import MarkdownItImage from './markdown-it-image'
 import 'github-markdown-css'
 import 'markdown-it-latex/dist/index.css'
 
 import * as echarts from 'echarts/dist/echarts.simple.min'
+import mermaid from 'mermaid'
 import flowchart from 'flowchart.js'
+import ImageViewer from './markdown-it-image/image-viewer.vue'
+import { createStreamingRenderer } from './streaming-renderer.js'
 
 const DEFAULT_OPTIONS_LINK_ATTRIBUTES = {
   attrs: {
@@ -47,13 +68,30 @@ const DEFAULT_OPTIONS_GITHUBTOC = {
   anchorClassName: 'anchor',
   anchorLinkSymbolClassName: 'octicon octicon-link'
 }
+const DEFAULT_OPTIONS_MERMAID = {
+  theme: 'default'
+}
+const DEFAULT_OPTIONS_IMAGE = {
+  hAlign: 'left',
+  viewer: true
+}
 
 
 export default defineComponent({
-  name: 'markdown-it-vue3-light',
+  name: 'MarkdownItVueStreaming',
+  components: { ImageViewer },
   props: {
     content: {
-      type: String
+      type: String,
+      default: ''
+    },
+    streaming: {
+      type: Boolean,
+      default: true
+    },
+    cursorChar: {
+      type: String,
+      default: '▎'
     },
     options: {
       type: Object,
@@ -65,13 +103,14 @@ export default defineComponent({
           linkAttributes: DEFAULT_OPTIONS_LINK_ATTRIBUTES,
           katex: DEFAULT_OPTIONS_KATEX,
           tasklists: DEFAULT_OPTIONS_TASKLISTS,
-          githubToc: DEFAULT_OPTIONS_GITHUBTOC
+          githubToc: DEFAULT_OPTIONS_GITHUBTOC,
+          mermaid: DEFAULT_OPTIONS_MERMAID
         }
       }
     }
   },
-  emits: ['render-complete'],
-  setup(props,{emit, expose}){
+  emits: ['render-complete', 'chunk-rendered'],
+  setup(props, { emit, expose }){
     const options = computed(() => props.options || {});
 
     const markdownItOpts = computed(() => options.value?.markdownIt || { linkify: true });
@@ -79,8 +118,24 @@ export default defineComponent({
     const katexOpts = computed(() => options.value?.katex || DEFAULT_OPTIONS_KATEX);
     const tasklistsOpts = computed(() => options.value?.tasklists ?? DEFAULT_OPTIONS_TASKLISTS);
     const githubTocOpts = computed(() => options.value?.githubToc || DEFAULT_OPTIONS_GITHUBTOC);
+    const imageOpts = computed(() => options.value?.image || DEFAULT_OPTIONS_IMAGE);
+    const mermaidOpts = computed(() => options.value?.mermaid || DEFAULT_OPTIONS_MERMAID);
 
     const markdownRef = ref(null);
+    const index = ref(0);
+    const showViewer = ref(false);
+    const optImage = reactive({ ...(imageOpts.value || DEFAULT_OPTIONS_IMAGE) });
+    optImage.urlSet = new Set();
+    const optMermaid = mermaidOpts.value || DEFAULT_OPTIONS_MERMAID
+    const data = reactive({
+      urlList: [],
+    });
+
+    // Streaming state
+    const renderedHtml = ref('')
+    const pendingText = ref('')
+    let lastContentLength = 0
+    let streamingRenderer = null
 
     const md = new MarkdownIt(markdownItOpts.value || {})
       .use(MarkdownItEmoji)
@@ -94,6 +149,7 @@ export default defineComponent({
       .use(MarkdownItHighlight)
       .use(MarkdownItLatex)
       .use(MarkdownItSourceMap)
+      .use(MarkdownItMermaid, optMermaid)
       .use(MarkdownItEcharts)
       .use(MarkdownItFlowchart)
       .use(MarkdownItLinkAttributes, linkAttributesOpts.value)
@@ -101,6 +157,7 @@ export default defineComponent({
       .use(MarkdownItTasklists, tasklistsOpts.value)
       .use(MarkdownItFontAwsome)
       .use(MarkdownItGithubToc, githubTocOpts.value)
+      .use(MarkdownItImage, optImage)
       .use(MarkdownItContainer, 'warning', {
         validate: function(params) {
           return params.trim() === 'warning'
@@ -120,7 +177,7 @@ export default defineComponent({
         },
         render: (tokens, idx) => {
           if (tokens[idx].nesting === 1) {
-            const icon = `<i class="markdown-it-vue-alert-icon markdown-it-vue-alert-icon-info"><svg viewBox="64 64 896 896" data-icon="info-circle" width="1em" height="1em" fill="currentColor" aria-hidden="true" class=""><path d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm32 664c0 4.4-3.6 8-8 8h-48c-4.4 0-8-3.6-8-8V456c0-4.4 3.6-8 8-8h48c4.4 0 8 3.6 8 8v272zm-32-344a48.01 48.01 0 0 1 0-96 48.01 48.01 0 0 1 0 96z"></path></svg></i>`
+            const icon = `<i class="markdown-it-vue-alert-icon markdown-it-vue-alert-icon-info"><svg viewBox="64 64 896 896" data-icon="info-circle" width="1em" height="1em" fill="currentColor" aria-hidden="true" class=""><path d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm32 664c0 4.4-3.6 8-8 8h-48c-4.4 0-8-3.6-8-8V456c0 4.4-3.6 8-8 8h48c4.4 0 8 3.6 8 8v272zm-32-344a48.01 48.01 0 0 1 0-96 48.01 48.01 0 0 1 0 96z"></path></svg></i>`
             return `<div class="markdown-it-vue-alter markdown-it-vue-alter-info">${icon}`
           } else {
             return '</div>'
@@ -154,37 +211,134 @@ export default defineComponent({
         }
       })
 
-    watch(() => props.content,(val) => {
-      nextTick(() => {
-          markdownRef.value.innerHTML = md.render(
-            val
-          )
-          // render echarts
-          document.querySelectorAll('.md-echarts').forEach(element => {
-            try {
-              let options = JSON.parse(element.textContent)
-              let chart = echarts.init(element)
-              chart.setOption(options)
-            } catch (e) {
-              element.outerHTML = `<pre>echarts complains: ${e}</pre>`
-            }
-          })
-          // render flowchart
-          document.querySelectorAll('.md-flowchart').forEach(element => {
-            try {
-              let code = element.textContent
-              let chart = flowchart.parse(code)
-              element.textContent = ''
-              chart.drawSVG(element)
-            } catch (e) {
-              element.outerHTML = `<pre>flowchart complains: ${e}</pre>`
-            }
-          })
+    // Initialize streaming renderer
+    streamingRenderer = createStreamingRenderer(md)
 
-          // emit event
+    // Track processed elements to avoid re-processing
+    const processedElements = new Set()
+
+    // Helper to process dynamic content rendering (echarts, mermaid, flowchart)
+    const processDynamicContent = () => {
+      // render echarts
+      document.querySelectorAll('.md-echarts').forEach(element => {
+        if (processedElements.has(element)) return
+        try {
+          let options = JSON.parse(element.textContent)
+          let chart = echarts.init(element)
+          chart.setOption(options)
+          processedElements.add(element)
+        } catch (e) {
+          // Don't show error for incomplete JSON during streaming - it will be re-rendered when complete
+          if (!e.message.includes('Unexpected end')) {
+            element.outerHTML = `<pre>echarts complains: ${e}</pre>`
+          }
+        }
+      })
+      // render mermaid - only process unprocessed elements
+      const mermaidElements = document.querySelectorAll('.mermaid')
+      const unprocessedMermaid = []
+      mermaidElements.forEach(el => {
+        if (!processedElements.has(el)) {
+          unprocessedMermaid.push(el)
+        }
+      })
+      if (unprocessedMermaid.length > 0) {
+        try {
+          mermaid.init(undefined, unprocessedMermaid)
+          unprocessedMermaid.forEach(el => processedElements.add(el))
+        } catch (e) {
+          // Silently ignore mermaid errors during streaming
+        }
+      }
+      // render flowchart
+      document.querySelectorAll('.md-flowchart').forEach(element => {
+        if (processedElements.has(element)) return
+        try {
+          let code = element.textContent
+          let chart = flowchart.parse(code)
+          element.textContent = ''
+          chart.drawSVG(element)
+          processedElements.add(element)
+        } catch (e) {
+          if (!e.message.includes('Unexpected end')) {
+            element.outerHTML = `<pre>flowchart complains: ${e}</pre>`
+          }
+        }
+      })
+    }
+
+    // Helper to update URL list for image viewer
+    const updateUrlList = () => {
+      let list = []
+      for (const i of optImage.urlSet) {
+        list.push(i)
+      }
+      data.urlList = list
+    }
+
+    // Watch content changes for streaming
+    watch(() => props.content, (val) => {
+      // Content was cleared - reset renderer
+      if (val.length === 0) {
+        optImage.urlSet.clear()
+        processedElements.clear()
+        renderedHtml.value = ''
+        pendingText.value = ''
+        lastContentLength = 0
+        streamingRenderer.reset()
+        return
+      }
+
+      // Content was replaced (shorter than before) - reset and re-render
+      if (val.length < lastContentLength) {
+        optImage.urlSet.clear()
+        processedElements.clear()
+        streamingRenderer.reset()
+        lastContentLength = 0
+        // Re-process entire content
+        const result = streamingRenderer.append(val)
+        renderedHtml.value = result.html
+        pendingText.value = result.pending
+        lastContentLength = val.length
+        nextTick(() => {
+          processDynamicContent()
+          updateUrlList()
+          emit('chunk-rendered')
+        })
+        return
+      }
+
+      // Normal streaming - append only new content
+      const appended = val.slice(lastContentLength)
+      lastContentLength = val.length
+
+      if (appended) {
+        const result = streamingRenderer.append(appended)
+        renderedHtml.value = result.html
+        pendingText.value = result.pending
+
+        nextTick(() => {
+          processDynamicContent()
+          updateUrlList()
+          emit('chunk-rendered')
+        })
+      }
+    }, { immediate: true })
+
+    // Watch streaming state - finalize when streaming ends
+    watch(() => props.streaming, (isStreaming) => {
+      if (!isStreaming) {
+        const result = streamingRenderer.finalize()
+        renderedHtml.value = result.html
+        pendingText.value = ''
+
+        nextTick(() => {
+          processDynamicContent()
+          updateUrlList()
           emit('render-complete')
         })
-    }, {immediate: true})
+      }
+    })
 
     // methods
     const use = (plugin, options) => {
@@ -192,7 +346,18 @@ export default defineComponent({
     }
 
     const get = () => {
-      return md
+       return md
+    }
+
+    const closeViewer = () => {
+      showViewer.value = false
+    }
+
+    const hdlClick = (e) => {
+      if (optImage.viewer && e.target.tagName == 'IMG') {
+        index.value = data.urlList.indexOf(e.target.src) || 0
+        showViewer.value = true
+      }
     }
 
     expose({
@@ -202,13 +367,47 @@ export default defineComponent({
 
     return {
       markdownRef,
-      md
+      showViewer,
+      index,
+      urlList: data.urlList,
+      hdlClick,
+      closeViewer,
+      renderedHtml,
+      pendingText
     }
   }
 })
 </script>
 
+<style lang="scss" scoped>
+.streaming-markdown {
+  position: relative;
+}
+
+.streaming-cursor {
+  display: inline-block;
+  animation: blink 1s infinite;
+  font-weight: bold;
+  vertical-align: text-bottom;
+}
+
+.streaming-pending {
+  opacity: 0.5;
+  font-style: italic;
+}
+
+@keyframes blink {
+  0%, 50% {
+    opacity: 1;
+  }
+  51%, 100% {
+    opacity: 0;
+  }
+}
+</style>
+
 <style lang="scss">
+/* Global styles for alert containers (same as markdown-it-vue.vue) */
 .markdown-it-vue-alter-info {
   border: 1px solid #91d5ff;
   background-color: #e6f7ff;

@@ -250,5 +250,3 @@ export const MarkdownItVue: DefineComponent<MarkdownItVueProps, object, object> 
   /** Install component into Vue */
   install: (app: App) => void
 }
-
-export const MarkdownItVueLight: typeof MarkdownItVue

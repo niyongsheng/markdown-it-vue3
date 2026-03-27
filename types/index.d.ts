@@ -1,3 +1,5 @@
-export * from './markdown-it-vue3'
-import { MarkdownItVue } from './markdown-it-vue3'
+export * from './markdown-it-vue'
+export * from './markdown-it-vue-streaming'
+export * from './streaming-renderer'
+import { MarkdownItVue } from './markdown-it-vue'
 export default MarkdownItVue
