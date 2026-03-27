@@ -42,7 +42,7 @@ import 'github-markdown-css'
 import 'markdown-it-latex/dist/index.css'
 import './markdown-it-copy.css'
 
-import * as echarts from 'echarts/dist/echarts.simple.min'
+import * as echarts from 'echarts'
 import mermaid from 'mermaid'
 import flowchart from 'flowchart.js'
 import ImageViewer from './markdown-it-image/image-viewer.vue'
@@ -74,7 +74,7 @@ const DEFAULT_OPTIONS_IMAGE = {
 
 
 export default defineComponent({
-  name: 'markdown-it-vue3',
+  name: 'markdown-it-vue',
   components: { ImageViewer },
   props: {
     content: {

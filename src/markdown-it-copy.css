@@ -37,6 +37,11 @@ pre.hljs:hover .code-copy-btn {
   display: block;
 }
 
+/* Default icon states */
+.code-copy-btn .check-icon {
+  display: none;
+}
+
 /* Copied state */
 .code-copy-btn.copied .copy-icon {
   display: none;

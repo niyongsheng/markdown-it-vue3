@@ -46,7 +46,7 @@ import 'github-markdown-css'
 import 'markdown-it-latex/dist/index.css'
 import './markdown-it-copy.css'
 
-import * as echarts from 'echarts/dist/echarts.simple.min'
+import * as echarts from 'echarts'
 import mermaid from 'mermaid'
 import flowchart from 'flowchart.js'
 import ImageViewer from './markdown-it-image/image-viewer.vue'
@@ -401,7 +401,7 @@ export default defineComponent({
 .streaming-cursor {
   display: inline-block;
   animation: blink 1s infinite;
-  font-weight: bold;
+  margin-left: 5px;
   vertical-align: text-bottom;
 }
 

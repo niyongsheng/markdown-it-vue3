@@ -68,9 +68,26 @@ Term 1
 Term 2
   ~ Definition 2a
   ~ Definition 2b
+  
+## list (nested)
+
+- **Sample Node 1**
+    - Sub-item 1.1 (Text1...)
+    - Sub-item 1.2 (Text2......)
+    - Sub-item 1.3 (Text3.........)
+    
+* **Sample Node 2**
+    - \`node content\`
 
 [Definition List Syntax](http://pandoc.org/README.html#definition-lists)
 
+## table
+
+| First Header  | Second Header | Third Header |
+| ------------- | ------------- | ------------- |
+| Content Cell  | Content Cell  | Content Cell |
+| Content Cell  | Content Cell  | Content Cell |
+| Content Cell  | Content Cell  | Content Cell |
 
 ## AsciiMath
 
@@ -122,31 +139,207 @@ The width and height is the size for chart container.
   "width": 500,
   "height": 400,
   "animation": false,
+  "title": {
+    "text": "Quarterly Revenue & Expenses",
+    "left": "center"
+  },
+  "legend": {
+    "data": ["Revenue", "Expenses"],
+    "top": 30
+  },
+  "grid": {
+    "bottom": 40
+  },
+  "xAxis": {
+    "type": "category",
+    "name": "Quarter",
+    "data": ["Q1", "Q2", "Q3", "Q4"]
+  },
+  "yAxis": {
+    "type": "value",
+    "name": "Amount ($K)"
+  },
   "series": [
     {
-      "name": "访问来源",
+      "name": "Revenue",
+      "type": "line",
+      "data": [500, 700, 900, 1200]
+    },
+    {
+      "name": "Expenses",
+      "type": "line",
+      "data": [400, 600, 800, 1000]
+    }
+  ]
+}
+\`\`\`
+
+\`\`\`echarts
+{
+  "width": 500,
+  "height": 400,
+  "animation": false,
+  "title": {
+    "text": "Traffic Sources",
+    "left": "center"
+  },
+  "legend": {
+    "show": false,
+    "bottom": 40,
+    "left": "center"
+  },
+  "tooltip": {
+    "trigger": "item",
+    "formatter": "{a} <br/>{b}: {c} ({d}%)"
+  },
+  "series": [
+    {
+      "name": "Traffic Source",
       "type": "pie",
-      "radius": "55%",
+      "radius": ["40%", "70%"],
+      "center": ["50%", "45%"],
+      "data": [
+        {"value": 235, "name": "Video Ads"},
+        {"value": 274, "name": "Affiliate"},
+        {"value": 310, "name": "Email Marketing"},
+        {"value": 335, "name": "Direct Access"},
+        {"value": 400, "name": "Search Engine"}
+      ]
+    }
+  ]
+}
+\`\`\`
+
+\`\`\`echarts
+{
+  "width": 600,
+  "height": 400,
+  "animation": true,
+  "title": {
+    "text": "Product Sales (Stacked)",
+    "left": "center",
+    "top": 10,
+    "textStyle": {
+      "fontSize": 16,
+      "fontWeight": "bold"
+    }
+  },
+  "legend": {
+    "show": false,
+    "data": ["A", "B", "C", "D"],
+    "top": "bottom",
+    "itemWidth": 12,
+    "itemHeight": 12
+  },
+  "tooltip": {
+    "trigger": "axis",
+    "axisPointer": {
+      "type": "shadow"
+    },
+    "backgroundColor": "rgba(50,50,50,0.7)",
+    "borderColor": "#fff",
+    "borderWidth": 1,
+    "textStyle": {
+      "color": "#fff"
+    }
+  },
+  "xAxis": {
+    "type": "category",
+    "name": "Product",
+    "nameLocation": "middle",
+    "nameGap": 30,
+    "data": ["Product 1", "Product 2", "Product 3", "Product 4"],
+    "axisLabel": {
+      "interval": 0
+    }
+  },
+  "yAxis": {
+    "type": "value",
+    "name": "Sales",
+    "nameLocation": "middle",
+    "nameGap": 40
+  },
+  "series": [
+    {
+      "name": "A",
+      "type": "bar",
+      "stack": "total",
+      "data": [120, 132, 101, 134],
+      "itemStyle": {
+        "borderRadius": [4, 4, 0, 0]
+      }
+    },
+    {
+      "name": "B",
+      "type": "bar",
+      "stack": "total",
+      "data": [220, 182, 191, 234],
+      "itemStyle": {
+        "borderRadius": [4, 4, 0, 0]
+      }
+    },
+    {
+      "name": "C",
+      "type": "bar",
+      "stack": "total",
+      "data": [150, 232, 201, 154],
+      "itemStyle": {
+        "borderRadius": [4, 4, 0, 0]
+      }
+    },
+    {
+      "name": "D",
+      "type": "bar",
+      "stack": "total",
+      "data": [90, 272, 81, 120],
+      "itemStyle": {
+        "borderRadius": [4, 4, 0, 0]
+      }
+    }
+  ]
+}
+\`\`\`
+
+\`\`\`echarts
+{
+  "width": 500,
+  "height": 400,
+  "animation": false,
+  "title": {
+    "text": "Performance Radar",
+    "left": "center"
+  },
+  "legend": {
+    "data": ["Budget", "Actual"],
+    "bottom": 0
+  },
+  "tooltip": {
+    "trigger": "item"
+  },
+  "radar": {
+    "indicator": [
+      {"name": "Sales", "max": 6500},
+      {"name": "Management", "max": 16000},
+      {"name": "IT", "max": 30000},
+      {"name": "Support", "max": 38000},
+      {"name": "R&D", "max": 52000},
+      {"name": "Marketing", "max": 25000}
+    ],
+    "center": ["50%", "45%"],
+    "radius": "60%"
+  },
+  "series": [
+    {
+      "name": "Budget vs Actual",
+      "type": "radar",
       "data": [
         {
-          "value": 235,
-          "name": "视频广告"
+          "value": [4200, 3000, 20000, 35000, 50000, 18000],
+          "name": "Budget"
         },
         {
-          "value": 274,
-          "name": "联盟广告"
-        },
-        {
-          "value": 310,
-          "name": "邮件营销"
-        },
-        {
-          "value": 335,
-          "name": "直接访问"
-        },
-        {
-          "value": 400,
-          "name": "搜索引擎"
+          "value": [5000, 14000, 28000, 26000, 42000, 21000],
+          "name": "Actual"
         }
       ]
     }
@@ -187,33 +380,6 @@ export default {
 \`\`\`bash
 npm install markdown-it-vue3
 \`\`\`
-
-## table
-
-| First Header  | Second Header |
-| ------------- | ------------- |
-| Content Cell  | Content Cell  |
-| Content Cell  | Content Cell  |
-
-## table2 (with empty lines)
-
-| 资源类型 | 具体内容 |
-
-|----------|----------|
-
-| 人员 | 采样员、现场负责人 |
-
-| 设备 | 采样器、保存容器、GPS、温控箱 |
-
-| 耗材 | 固定剂、标签、采样记录表 |
-
-| 文档 | 采样方案、作业指导书 |
-
-## list (nested)
-
-*   **采样点位**（排气筒、厂界、无组织监控点）
-    *   **采样频次与时间**
-    *   **检测因子**（如 SO₂、NOx、颗粒物、VOCs、重金属等）
 
 ## flowchart.js
 
