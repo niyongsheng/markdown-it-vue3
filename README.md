@@ -4,7 +4,7 @@
 [![vue 3](https://img.shields.io/badge/vue-3.x-42b883)](https://vuejs.org/)
 
 
-> Vue3 版本的 markdown 多样式流式渲染组件。<br>
+> Vue3 版本的 markdown 流式渲染组件。<br>
 > A Vue 3 markdown rendering component support streaming, built on top of [markdown-it](https://github.com/markdown-it/markdown-it)
 
 ## Features

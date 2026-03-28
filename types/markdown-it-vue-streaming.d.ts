@@ -11,6 +11,8 @@ export interface MarkdownItVueStreamingProps {
   streaming?: boolean
   /** Character to display as the streaming cursor */
   cursorChar?: string
+  /** theme for markdown rendering: 'light', 'dark', or 'auto' */
+  theme?: 'light' | 'dark' | 'auto'
   /** Options for markdown-it and plugins */
   options?: MarkdownItVueOptions
 }

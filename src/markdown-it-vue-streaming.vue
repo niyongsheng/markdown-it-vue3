@@ -347,6 +347,14 @@ export default defineComponent({
         renderedHtml.value = result.html
         pendingText.value = result.pending
         lastContentLength = val.length
+
+        // Finalize if not streaming (handles initial content without newlines)
+        if (!props.streaming) {
+          const finalResult = streamingRenderer.finalize()
+          renderedHtml.value = finalResult.html
+          pendingText.value = ''
+        }
+
         nextTick(() => {
           processDynamicContent()
           updateUrlList()
@@ -363,6 +371,13 @@ export default defineComponent({
         const result = streamingRenderer.append(appended)
         renderedHtml.value = result.html
         pendingText.value = result.pending
+
+        // Finalize if not streaming (handles initial content without newlines)
+        if (!props.streaming) {
+          const finalResult = streamingRenderer.finalize()
+          renderedHtml.value = finalResult.html
+          pendingText.value = ''
+        }
 
         nextTick(() => {
           processDynamicContent()

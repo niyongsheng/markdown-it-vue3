@@ -235,8 +235,18 @@ export interface MarkdownItVueOptions {
 export interface MarkdownItVueProps {
   /** markdown plain text */
   content: string
+  /** theme for markdown rendering: 'light', 'dark', or 'auto' */
+  theme?: 'light' | 'dark' | 'auto'
   /** options for MarkdownItVue */
   options?: MarkdownItVueOptions
+}
+
+/**
+ * Events emitted by the MarkdownItVue component
+ */
+export interface MarkdownItVueEmits {
+  /** Emitted when rendering is complete */
+  'render-complete': () => void
 }
 
 export interface MarkdownItVueExpose {
@@ -246,7 +256,7 @@ export interface MarkdownItVueExpose {
   get: () => unknown
 }
 
-export const MarkdownItVue: DefineComponent<MarkdownItVueProps, object, object> & {
+export const MarkdownItVue: DefineComponent<MarkdownItVueProps, object, object, object, object, object, object, MarkdownItVueEmits, string, {}, {}, {}, MarkdownItVueExpose> & {
   /** Install component into Vue */
   install: (app: App) => void
 }
