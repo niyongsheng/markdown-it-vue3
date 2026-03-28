@@ -62,7 +62,7 @@
 
 <script>
 import { on, off, rafThrottle, isFirefox } from '../utils'
-import {defineComponent, ref, watch, toRef, toRefs, nextTick, computed, reactive} from 'vue'
+import {defineComponent, ref, watch, toRef, toRefs, nextTick, computed, reactive, onMounted, onUnmounted} from 'vue'
 
 const Mode = {
   CONTAIN: {
@@ -142,7 +142,7 @@ export default defineComponent({
     // methods
     const hide = () => {
       deviceSupportUninstall()
-      onClose()
+      onClose.value()
     }
 
     const deviceSupportInstall = () => {
@@ -311,11 +311,24 @@ export default defineComponent({
       })
     })
 
+    // lifecycle
+    onMounted(() => {
+      deviceSupportInstall()
+    })
+
+    onUnmounted(() => {
+      deviceSupportUninstall()
+    })
+
     return {
       infinite,
       mode,
       loading,
       imgRef,
+      // eslint-disable-next-line vue/no-dupe-keys
+      urlList,
+      // eslint-disable-next-line vue/no-dupe-keys
+      index,
       ...toRefs(data),
       zIndex,
       isSingle,

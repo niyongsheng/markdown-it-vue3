@@ -8,14 +8,14 @@
     <image-viewer
       v-if="showViewer"
       :url-list="urlList"
-      v-model="index"
+      v-model:index="index"
       :on-close="closeViewer"
     />
   </div>
 </template>
 
 <script>
-import {defineComponent, ref, watch, nextTick, reactive, computed, onMounted, onUnmounted} from 'vue'
+import {defineComponent, ref, watch, nextTick, reactive, computed, onMounted, onUnmounted, toRefs} from 'vue'
 import MarkdownIt from 'markdown-it'
 import { full as MarkdownItEmoji } from 'markdown-it-emoji'
 import MarkdownItSubscript from 'markdown-it-sub'
@@ -273,7 +273,7 @@ export default defineComponent({
       markdownRef,
       showViewer,
       index,
-      urlList: data.urlList,
+      ...toRefs(data),
       hdlClick,
       closeViewer
     }

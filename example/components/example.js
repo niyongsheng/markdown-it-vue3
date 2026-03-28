@@ -3,8 +3,8 @@ export default `
 
 ## Image size and Viewer
 
-![gvf](https://fuss10.elemecdn.com/a/3f/3302e58f9a181d2509f3dc0fa68b0jpeg.jpeg =60x45)
-![ravenq](https://fuss10.elemecdn.com/a/3f/3302e58f9a181d2509f3dc0fa68b0jpeg.jpeg =120x)
+![img_1](https://fuss10.elemecdn.com/a/3f/3302e58f9a181d2509f3dc0fa68b0jpeg.jpeg =60x45)
+![img_2](https://fuss10.elemecdn.com/a/3f/3302e58f9a181d2509f3dc0fa68b0jpeg.jpeg =120x)
 
 ## GitHub Table of Contents
 
