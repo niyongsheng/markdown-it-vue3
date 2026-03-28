@@ -398,6 +398,10 @@ export default defineComponent({
   position: relative;
 }
 
+.markdown-body {
+  overflow-x: auto;
+}
+
 .streaming-cursor {
   display: inline-block;
   animation: blink 1s infinite;

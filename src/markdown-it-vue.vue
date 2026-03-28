@@ -282,6 +282,10 @@ export default defineComponent({
 </script>
 
 <style lang="scss">
+.markdown-body {
+  overflow-x: auto;
+}
+
 .markdown-it-vue-alter-info {
   border: 1px solid #91d5ff;
   background-color: #e6f7ff;

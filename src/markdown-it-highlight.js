@@ -127,7 +127,7 @@ const highlightPlugin = md => {
     const langObj = hljs.getLanguage(lang)
     let cnt
     if (langObj) {
-      cnt = hljs.highlight(lang, code).value
+      cnt = hljs.highlight(code, { language: lang }).value
     } else {
       cnt = hljs.highlightAuto(code).value
     }

@@ -39,6 +39,8 @@
             class="el-icon-refresh-right"
             @click="handleActions('clocelise')"
           />
+          <i class="el-image-viewer__actions__divider" />
+          <i class="fa fa-download" @click="downloadCurrentImage" />
         </div>
       </div>
       <!-- CANVAS -->
@@ -227,7 +229,7 @@ export default defineComponent({
 
       e.preventDefault()
     }
-    
+
     const reset = () => {
       data.transform = {
         scale: 1,
@@ -295,6 +297,49 @@ export default defineComponent({
       data.transform.enableTransition = enableTransition
     }
 
+    const downloadCurrentImage = async () => {
+      const url = currentImg.value
+      if (!url) return
+
+      // 从 URL 中提取文件名
+      const getFilenameFromUrl = (urlStr) => {
+        try {
+          const urlObj = new URL(urlStr)
+          const pathname = urlObj.pathname
+          const filename = pathname.substring(pathname.lastIndexOf('/') + 1)
+          return filename || 'image'
+        } catch {
+          // 如果 URL 解析失败，尝试从字符串中提取
+          const lastSlash = urlStr.lastIndexOf('/')
+          const lastQuestion = urlStr.indexOf('?', lastSlash)
+          let filename = lastQuestion > -1
+            ? urlStr.substring(lastSlash + 1, lastQuestion)
+            : urlStr.substring(lastSlash + 1)
+          return filename || 'image'
+        }
+      }
+
+      const filename = getFilenameFromUrl(url)
+
+      try {
+        // 通过 fetch 获取图片 blob，解决跨域下载问题
+        const response = await fetch(url)
+        const blob = await response.blob()
+        const blobUrl = URL.createObjectURL(blob)
+
+        const link = document.createElement('a')
+        link.href = blobUrl
+        link.download = filename
+        document.body.appendChild(link)
+        link.click()
+        document.body.removeChild(link)
+        URL.revokeObjectURL(blobUrl)
+      } catch (e) {
+        // 如果 fetch 失败，回退到直接打开
+        window.open(url, '_blank')
+      }
+    }
+
 
     // watch
     watch(()=>props.index,(val) => {
@@ -346,6 +391,7 @@ export default defineComponent({
       prev,
       next,
       handleActions,
+      downloadCurrentImage,
     }
   }
 })
@@ -402,7 +448,7 @@ export default defineComponent({
   left: 50%;
   bottom: 30px;
   transform: translateX(-50%);
-  width: 282px;
+  width: 330px;
   height: 44px;
   padding: 0 23px;
   background-color: #606266;
