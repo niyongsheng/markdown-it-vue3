@@ -41,10 +41,18 @@
       >
         Static Markdown
       </button>
+      <div class="theme-selector">
+        <label for="theme">Theme:</label>
+        <select id="theme" v-model="theme">
+          <option value="light">Light</option>
+          <option value="dark">Dark</option>
+          <option value="auto">Auto</option>
+        </select>
+      </div>
     </div>
-    <div class="tab-content">
-      <ExampleStreaming v-if="activeTab === 'streaming'" />
-      <Example v-else />
+    <div class="tab-content" :class="theme">
+      <ExampleStreaming v-if="activeTab === 'streaming'" :theme="theme" />
+      <Example v-else :theme="theme" />
     </div>
   </div>
 </template>
@@ -55,6 +63,7 @@ import Example from './components/example.vue'
 import ExampleStreaming from './components/example-streaming.vue'
 
 const activeTab = ref('streaming')
+const theme = ref('auto')
 </script>
 
 <style>
@@ -96,6 +105,7 @@ const activeTab = ref('streaming')
 .tabs {
   display: flex;
   justify-content: center;
+  align-items: center;
   gap: 8px;
   margin-bottom: 24px;
 }
@@ -123,9 +133,50 @@ const activeTab = ref('streaming')
   color: white;
 }
 
+.theme-selector {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-left: 16px;
+  padding-left: 16px;
+  border-left: 1px solid #e8e8e8;
+}
+
+.theme-selector label {
+  font-size: 14px;
+  color: #666;
+}
+
+.theme-selector select {
+  padding: 6px 12px;
+  border: 1px solid #d9d9d9;
+  border-radius: 6px;
+  background-color: #fff;
+  font-size: 14px;
+  cursor: pointer;
+  outline: none;
+}
+
+.theme-selector select:focus {
+  border-color: #1890ff;
+}
+
 .tab-content {
   max-width: 1200px;
   margin: 0 auto;
   padding: 0 20px;
+}
+
+/* Dark theme styles */
+.tab-content.dark {
+  background-color: #0d1117;
+  padding: 20px;
+  border-radius: 8px;
+}
+
+.tab-content.dark .md-text {
+  background-color: #161b22;
+  color: #c9d1d9;
+  border-color: #30363d;
 }
 </style>

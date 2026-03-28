@@ -66,6 +66,7 @@
     "@vue/compiler-sfc": "^3.5.13",
     "eslint": "^8.57.1",
     "eslint-plugin-vue": "^9.33.0",
+    "raw-loader": "^4.0.2",
     "sass": "^1.86.0",
     "sass-loader": "^16.0.5"
   },

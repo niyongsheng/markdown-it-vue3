@@ -33,6 +33,7 @@
         <MarkdownItVueStreaming
           :content="streamContent"
           :streaming="isStreaming"
+          :theme="theme"
           @render-complete="onRenderComplete"
         />
       </div>
@@ -49,6 +50,12 @@ export default {
   name: 'StreamingExample',
   components: {
     MarkdownItVueStreaming
+  },
+  props: {
+    theme: {
+      type: String,
+      default: 'light'
+    }
   },
   setup() {
     const editableContent = ref(exampleContent)
@@ -201,7 +208,6 @@ export default {
 .markdown-container {
   border: 1px solid #e8e8e8;
   border-radius: 8px;
-  background-color: #fafafa;
   padding: 20px;
   min-height: 340px;
 }

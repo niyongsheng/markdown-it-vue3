@@ -42,7 +42,6 @@ import MarkdownItFlowchart from './markdown-it-plugin-flowchart'
 import MarkdownItHighlight, { setupCodeCopy } from './markdown-it-highlight'
 import MarkdownItFontAwsome from './markdown-it-font-awsome'
 import MarkdownItImage from './markdown-it-image'
-import 'github-markdown-css'
 import 'markdown-it-latex/dist/index.css'
 import './markdown-it-copy.css'
 
@@ -51,6 +50,30 @@ import mermaid from 'mermaid'
 import flowchart from 'flowchart.js'
 import ImageViewer from './markdown-it-image/image-viewer.vue'
 import { createStreamingRenderer } from './streaming-renderer.js'
+
+// Dynamic theme stylesheet loader (shared with markdown-it-vue.vue)
+const THEME_CSS_ID = 'markdown-theme-css'
+
+// Import CSS content at build time using raw-loader
+const cssContent = {
+  light: require('!!raw-loader!github-markdown-css/github-markdown-light.css').default,
+  dark: require('!!raw-loader!github-markdown-css/github-markdown-dark.css').default,
+  default: require('!!raw-loader!github-markdown-css/github-markdown.css').default
+}
+
+const loadThemeStylesheet = (theme) => {
+  // Remove existing stylesheet by ID
+  const existing = document.getElementById(THEME_CSS_ID)
+  if (existing) {
+    existing.remove()
+  }
+
+  // Create style tag with inlined CSS content
+  const style = document.createElement('style')
+  style.id = THEME_CSS_ID
+  style.textContent = cssContent[theme] || cssContent.default
+  document.head.appendChild(style)
+}
 
 const DEFAULT_OPTIONS_LINK_ATTRIBUTES = {
   attrs: {
@@ -93,6 +116,11 @@ export default defineComponent({
     cursorChar: {
       type: String,
       default: '▎'
+    },
+    theme: {
+      type: String,
+      default: 'auto',
+      validator: (val) => ['light', 'dark', 'auto'].includes(val)
     },
     options: {
       type: Object,
@@ -150,6 +178,11 @@ export default defineComponent({
     onUnmounted(() => {
       cleanupCopy?.()
     })
+
+    // Watch for theme changes (immediate: true handles initial load)
+    watch(() => props.theme, (newTheme) => {
+      loadThemeStylesheet(newTheme)
+    }, { immediate: true })
 
     const md = new MarkdownIt(markdownItOpts.value || {})
       .use(MarkdownItEmoji)

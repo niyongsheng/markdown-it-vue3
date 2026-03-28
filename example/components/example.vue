@@ -1,11 +1,12 @@
 <template>
   <div class="container">
     <textarea class="md-text" rows="10" v-model="content"/>
-    <markdown-it-vue 
-      class="md-body" 
-      :content="content" 
-      :options="options" 
-      @render-complete="hdlCmplete" 
+    <markdown-it-vue
+      class="md-body"
+      :content="content"
+      :options="options"
+      :theme="theme"
+      @render-complete="hdlCmplete"
     />
   </div>
 </template>
@@ -18,6 +19,12 @@ import MarkdownItVue from '../../src'
 export default defineComponent({
   components: {
     MarkdownItVue
+  },
+  props: {
+    theme: {
+      type: String,
+      default: 'light'
+    }
   },
   setup() {
 
