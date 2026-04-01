@@ -77,7 +77,7 @@ const Mode = {
   },
 }
 
-const mousewheelEventName = isFirefox() ? 'DOMMouseScroll' : 'mousewheel'
+const mousewheelEventName = isFirefox ? 'DOMMouseScroll' : 'mousewheel'
 
 export default defineComponent({
   name: 'elImageViewer',
