@@ -145,7 +145,7 @@ The width and height is the size for chart container.
   },
   "legend": {
     "data": ["Revenue", "Expenses"],
-    "top": 30
+    "top": 70
   },
   "grid": {
     "bottom": 40

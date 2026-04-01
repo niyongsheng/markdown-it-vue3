@@ -122,6 +122,10 @@ export default defineComponent({
       default: 'auto',
       validator: (val) => ['light', 'dark', 'auto'].includes(val)
     },
+    html: {
+      type: Boolean,
+      default: false
+    },
     options: {
       type: Object,
       default() {
@@ -142,7 +146,11 @@ export default defineComponent({
   setup(props, { emit, expose }){
     const options = computed(() => props.options || {});
 
-    const markdownItOpts = computed(() => options.value?.markdownIt || { linkify: true });
+    const markdownItOpts = computed(() => ({
+      html: props.html,
+      linkify: true,
+      ...options.value?.markdownIt
+    }));
     const linkAttributesOpts = computed(() => options.value?.linkAttributes || DEFAULT_OPTIONS_LINK_ATTRIBUTES);
     const katexOpts = computed(() => options.value?.katex || DEFAULT_OPTIONS_KATEX);
     const tasklistsOpts = computed(() => options.value?.tasklists ?? DEFAULT_OPTIONS_TASKLISTS);

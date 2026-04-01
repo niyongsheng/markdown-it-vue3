@@ -5,47 +5,45 @@ import { DefineComponent, App } from 'vue'
  * https://markdown-it.github.io/markdown-it/#MarkdownIt.new
  */
 export interface MarkdownItOptions {
-  /** false.Set true to enable HTML tags in source.Be careful!
-   * That's not safe! You may need external sanitizer to protect output from XSS.
-   * It's better to extend features via plugins, instead of enabling HTML.
-   */
-  html: boolean
+  /** Enable HTML tags in source. Be careful! That's not safe!
+   * You may need external sanitizer to protect output from XSS. */
+  html?: boolean
   /**
    * false.Set true to add '/' when closing single tags(<br />).
    * This is needed only for full CommonMark compatibility.
    * In real world you will need HTML output.
    */
-  xhtmlOut: boolean
+  xhtmlOut?: boolean
   /**
    * false.Set true to convert \n in paragraphs into<br>.
    */
-  breaks: boolean
+  breaks?: boolean
   /**
    * language -.CSS language class prefix for fenced blocks.Can be useful for external highlighters.
    */
-  langPrefix: string
+  langPrefix?: string
   /**
    * false.Set true to autoconvert URL - like text to links.
    */
-  linkify: boolean
+  linkify?: boolean
   /**
    * false.Set true to enable some language - neutral replacement + quotes beautification(smartquotes).
    */
-  typographer: boolean
+  typographer?: boolean
   /**
    * ""'', String or Array.Double + single quotes replacement pairs,
    * when typographer enabled and smartquotes on.For example, you can use '«»""'
    * for Russian, '""''' for German, and['«\xA0', '\xA0»', '‹\xA0', '\xA0›']
    * for French(including nbsp).
    */
-  quotes: string | string[]
+  quotes?: string | string[]
   /**
    * null.Highlighter function for fenced code blocks.
    * Highlighter function (str, lang) should return escaped HTML.
    * It can also return empty string if the source was not changed and should be escaped externaly.
    * If result starts with <pre...internal wrapper is skipped.
    */
-  highlight: ((str: string, lang: string) => string)
+  highlight?: (str: string, lang: string) => string
 }
 
 export interface LinkAttributesOptionsAttrs {
@@ -237,6 +235,8 @@ export interface MarkdownItVueProps {
   content: string
   /** theme for markdown rendering: 'light', 'dark', or 'auto' */
   theme?: 'light' | 'dark' | 'auto'
+  /** Enable HTML tags in source. Default: false */
+  html?: boolean
   /** options for MarkdownItVue */
   options?: MarkdownItVueOptions
 }
@@ -244,7 +244,7 @@ export interface MarkdownItVueProps {
 /**
  * Events emitted by the MarkdownItVue component
  */
-export interface MarkdownItVueEmits {
+export type MarkdownItVueEmits = {
   /** Emitted when rendering is complete */
   'render-complete': () => void
 }
@@ -256,7 +256,7 @@ export interface MarkdownItVueExpose {
   get: () => unknown
 }
 
-export const MarkdownItVue: DefineComponent<MarkdownItVueProps, object, object, object, object, object, object, MarkdownItVueEmits, string, {}, {}, {}, MarkdownItVueExpose> & {
+export const MarkdownItVue: DefineComponent<MarkdownItVueProps> & {
   /** Install component into Vue */
   install: (app: App) => void
 }

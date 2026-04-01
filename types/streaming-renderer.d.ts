@@ -1,4 +1,4 @@
-import MarkdownIt from 'markdown-it'
+import MarkdownIt = require('markdown-it')
 
 /**
  * State returned by streaming renderer methods

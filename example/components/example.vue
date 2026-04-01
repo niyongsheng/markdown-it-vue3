@@ -6,6 +6,7 @@
       :content="content"
       :options="options"
       :theme="theme"
+      html
       @render-complete="hdlCmplete"
     />
   </div>

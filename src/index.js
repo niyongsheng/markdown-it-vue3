@@ -1,10 +1,10 @@
-import MarkdownItVue from './markdown-it-vue'
+import MarkdownItVue from './markdown-it-vue.vue'
 import MarkdownItVueStreaming from './markdown-it-vue-streaming.vue'
 import { createStreamingRenderer } from './streaming-renderer'
 
-const install = function (Vue) {
-  Vue.component(MarkdownItVue.name, MarkdownItVue)
-  Vue.component(MarkdownItVueStreaming.name, MarkdownItVueStreaming)
+const install = function (app) {
+  app.component(MarkdownItVue.name, MarkdownItVue)
+  app.component(MarkdownItVueStreaming.name, MarkdownItVueStreaming)
 }
 
 /* istanbul ignore if */

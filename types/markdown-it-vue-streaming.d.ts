@@ -13,6 +13,8 @@ export interface MarkdownItVueStreamingProps {
   cursorChar?: string
   /** theme for markdown rendering: 'light', 'dark', or 'auto' */
   theme?: 'light' | 'dark' | 'auto'
+  /** Enable HTML tags in source. Default: false */
+  html?: boolean
   /** Options for markdown-it and plugins */
   options?: MarkdownItVueOptions
 }
@@ -20,7 +22,7 @@ export interface MarkdownItVueStreamingProps {
 /**
  * Events emitted by the MarkdownItVueStreaming component
  */
-export interface MarkdownItVueStreamingEmits {
+export type MarkdownItVueStreamingEmits = {
   /** Emitted when rendering is complete (streaming set to false) */
   'render-complete': () => void
   /** Emitted after each chunk is rendered */
@@ -41,18 +43,4 @@ export interface MarkdownItVueStreamingExpose {
  * MarkdownItVueStreaming Vue component for real-time markdown rendering
  * optimized for AI conversation-style streaming content.
  */
-export const MarkdownItVueStreaming: DefineComponent<
-  MarkdownItVueStreamingProps,
-  object,
-  object,
-  object,
-  object,
-  object,
-  object,
-  MarkdownItVueStreamingEmits,
-  string,
-  {},
-  {},
-  {},
-  MarkdownItVueStreamingExpose
->
+export const MarkdownItVueStreaming: DefineComponent<MarkdownItVueStreamingProps>

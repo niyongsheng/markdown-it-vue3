@@ -34,6 +34,7 @@
           :content="streamContent"
           :streaming="isStreaming"
           :theme="theme"
+          html
           @render-complete="onRenderComplete"
         />
       </div>
